@@ -1,9 +1,8 @@
 package petros.efthymiou.groovy.playlist
 
-class PlaylistAPI {
+interface PlaylistAPI {
 
-    fun fetchAllPlaylists(): Result<List<Playlist>> {
-        TODO("Not implemented yet")
-
+    fun fetchAllPlaylists(): List<Playlist> {
+        return emptyList()
     }
 }

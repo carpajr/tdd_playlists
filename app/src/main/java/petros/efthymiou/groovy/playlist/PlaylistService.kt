@@ -1,13 +1,17 @@
 package petros.efthymiou.groovy.playlist
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
 
-class PlaylistService {
-
-    val playlistAPI = PlaylistAPI()
-
+class PlaylistService (
+   private val api: PlaylistAPI
+) {
     suspend fun fetchPlaylists(): Flow<Result<List<Playlist>>> {
-        return playlistAPI.fetchAllPlaylists()
+        return flow {
+            emit(Result.success(api.fetchAllPlaylists()))
+        }.catch {
+            emit(Result.failure(RuntimeException("Something went wrong")))
+        }
     }
 }
