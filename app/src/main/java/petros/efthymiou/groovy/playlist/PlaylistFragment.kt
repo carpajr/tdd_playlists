@@ -1,5 +1,6 @@
 package petros.efthymiou.groovy.playlist
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -7,45 +8,46 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
-import okhttp3.OkHttpClient
+import dagger.hilt.android.AndroidEntryPoint
 import petros.efthymiou.groovy.R
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
+import kotlin.concurrent.thread
 
-
+@AndroidEntryPoint
 class PlaylistFragment : Fragment() {
 
     lateinit var viewModel: PlayListViewModel
+
+    @Inject
     lateinit var viewModelFactory: PlayListViewModelFactory
 
-    private val retrofit = Retrofit.Builder()
-        .baseUrl("http://localhost:3001/")  // please check that it matches your current local ip
-        .client(OkHttpClient())
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    private val api = retrofit.create(PlaylistAPI::class.java)
-    private val service = PlaylistService(api)
-    private val repository = PlaylistRepository(service)
-
+    @SuppressLint("CutPasteId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_item_list, container, false)
+        val view = inflater.inflate(R.layout.fragment_playlist, container, false)
 
         setupViewModel()
 
-        viewModel.playlists.observe(this as LifecycleOwner, { playlists ->
-            if(playlists.getOrNull() != null) {
-                setupList(view, playlists.getOrNull()!!)
+        viewModel.loader.observe(this as LifecycleOwner) { loading ->
+            when (loading) {
+                true -> view.findViewById<View>(R.id.loader).visibility = View.VISIBLE
+                else -> view.findViewById<View>(R.id.loader).visibility = View.GONE
             }
-            else {
-                TODO()
+        }
+
+        viewModel.playlists.observe(this as LifecycleOwner) { playlists ->
+            playlists.getOrNull()?.let { playlist ->
+
+                //view.findViewById<ProgressBar>(R.id.loader).visibility = View.GONE
+                //view.findViewById<RecyclerView>(R.id.playlists_list).visibility = View.VISIBLE
+                setupList(view.findViewById<View>(R.id.playlists_list), playlist)
             }
-        })
+        }
 
         return view
     }
@@ -56,22 +58,16 @@ class PlaylistFragment : Fragment() {
     ) {
         with(view as RecyclerView) {
             layoutManager = LinearLayoutManager(context)
-
             adapter = MyPlaylistRecyclerViewAdapter(playlists)
         }
     }
 
     private fun setupViewModel() {
-        viewModelFactory = PlayListViewModelFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory)[PlayListViewModel::class.java]
     }
 
     companion object {
-
         @JvmStatic
-        fun newInstance() =
-            PlaylistFragment().apply {
-
-            }
+        fun newInstance() = PlaylistFragment().apply {}
     }
 }

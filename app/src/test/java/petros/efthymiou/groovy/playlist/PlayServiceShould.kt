@@ -2,8 +2,6 @@ package petros.efthymiou.groovy.playlist
 
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import org.mockito.Mockito.mock
@@ -17,7 +15,6 @@ class PlayServiceShould: BaseUnitTest() {
     private lateinit var service: PlaylistService
     private val api: PlaylistAPI = mock()
     private val playlists: List<Playlist> = mock()
-    private val exception = RuntimeException("Something went wrong")
 
     @Test
     fun fetchPlaylistsFromAPI(): Unit = runTest {
@@ -38,9 +35,11 @@ class PlayServiceShould: BaseUnitTest() {
     }
 
     private fun mockSuccessfulCase(): PlaylistService {
-        whenever(api.fetchAllPlaylists()).thenReturn(
-            playlists
-        )
+        runTest {
+            whenever(api.fetchAllPlaylists()).thenReturn(
+                playlists
+            )
+        }
         val service = PlaylistService(api)
         return service
     }
@@ -53,9 +52,11 @@ class PlayServiceShould: BaseUnitTest() {
     }
 
     private fun mockFailureCase() {
-        whenever(api.fetchAllPlaylists()).thenThrow(
-            RuntimeException("Damn backend developer")
-        )
+        runTest {
+            whenever(api.fetchAllPlaylists()).thenThrow(
+                RuntimeException("Damn backend developer")
+            )
+        }
 
         service = PlaylistService(api)
     }
