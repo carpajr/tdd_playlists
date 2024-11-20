@@ -1,8 +1,9 @@
 package petros.efthymiou.groovy.playlist
 
+import retrofit2.http.GET
+
 interface PlaylistAPI {
 
-    fun fetchAllPlaylists(): List<Playlist> {
-        return emptyList()
-    }
+    @GET("playlists")
+    fun fetchAllPlaylists(): List<Playlist>
 }
