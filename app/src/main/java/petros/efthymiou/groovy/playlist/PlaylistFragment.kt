@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import petros.efthymiou.groovy.R
 import javax.inject.Inject
@@ -58,7 +59,12 @@ class PlaylistFragment : Fragment() {
     ) {
         with(view as RecyclerView) {
             layoutManager = LinearLayoutManager(context)
-            adapter = MyPlaylistRecyclerViewAdapter(playlists)
+            adapter = MyPlaylistRecyclerViewAdapter(playlists) { id ->
+                val action =
+                    PlaylistFragmentDirections.actionPlaylistFragmentToPlaylistDetailFragment(id)
+
+                findNavController().navigate(action)
+            }
         }
     }
 

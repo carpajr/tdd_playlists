@@ -6,6 +6,7 @@ plugins {
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
 
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {
@@ -82,6 +83,13 @@ dependencies {
     implementation 'com.google.devtools.ksp:symbol-processing-api:1.9.22-1.0.17'
     implementation "com.google.dagger:hilt-android:2.51.1"
     kapt "com.google.dagger:hilt-compiler:2.51.1"
+
+    //ok http3 test
+    androidTestImplementation 'com.jakewharton.espresso:okhttp3-idling-resource:1.0.0'
+
+    // navigation
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.8.4'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.8.4'
 }
 
 // Allow references to generated code

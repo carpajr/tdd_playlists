@@ -9,7 +9,8 @@ import android.widget.TextView
 import petros.efthymiou.groovy.R
 
 class MyPlaylistRecyclerViewAdapter(
-    private val values: List<Playlist>
+    private val values: List<Playlist>,
+    private val listener: (String) -> Unit
 ) : RecyclerView.Adapter<MyPlaylistRecyclerViewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -25,7 +26,8 @@ class MyPlaylistRecyclerViewAdapter(
 
         holder.playlistName.text = item.name
         holder.playlistCategory.text = item.category
-        holder.playlistImage.setImageResource(R.mipmap.playlist)
+        holder.playlistImage.setImageResource(item.image)
+        holder.root.setOnClickListener { listener(item.id) }
     }
 
     override fun getItemCount(): Int = values.size
@@ -34,6 +36,7 @@ class MyPlaylistRecyclerViewAdapter(
         val playlistName: TextView =  view.findViewById(R.id.playlist_name)
         val playlistCategory: TextView = view.findViewById(R.id.playlist_category)
         val playlistImage: ImageView = view.findViewById(R.id.playlist_image)
+        val root: View = view.findViewById(R.id.playlist_item_root)
 
     }
 

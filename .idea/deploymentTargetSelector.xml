@@ -8,10 +8,7 @@
       <SelectionState runConfigName="PlaylistFeature">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="displayListOfPlaylists()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="displayLoaderWhileFetchingThePlaylists()">
+      <SelectionState runConfigName="navigateToDetailScreen()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
